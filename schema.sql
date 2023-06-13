@@ -5,12 +5,15 @@
 create table users (
   -- UUID from auth.users
   id uuid references auth.users not null primary key,
+  username text unique, 
   full_name text,
   avatar_url text,
   -- The customer's billing address, stored in JSON format.
   billing_address jsonb,
   -- Stores your customer's payment instruments.
   payment_method jsonb
+  updated_at timestamp with time zone, 
+  constraint username_length check (char_length(username) >= 3) 
 );
 alter table users enable row level security;
 create policy "Can view own user data." on users for select using (auth.uid() = id);
