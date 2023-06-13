@@ -9,7 +9,10 @@
             "method": "post",
             "params": {
                 "name": "Hobby",
-                "description": "Hobby product description"
+                "description": "Hobby product description",
+                "metadata": {
+                    "project": "${.env:PROJECT}"
+                }
             }
         },
         {

@@ -55,6 +55,7 @@ export const getActiveProductsWithPrices = async () => {
   const { data, error } = await supabase
     .from('products')
     .select('*, prices(*)')
+    .eq('metadata->>project', process.env.PROJECT_NAME)
     .eq('active', true)
     .eq('prices.active', true)
     .order('metadata->index')
