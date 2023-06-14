@@ -29,7 +29,7 @@ export default async function Navbar() {
                   Account
                 </Link>
               ) : (
-                <Link href="/" className={s.link}>
+                <Link href="/pricing" className={s.link}>
                   Pricing
                 </Link>
               )}
