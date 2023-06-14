@@ -51,7 +51,10 @@
             "method": "post",
             "params": {
                 "name": "Freelancer",
-                "description": "Freelancer product description"
+                "description": "Freelancer product description",
+                "metadata": {
+                    "project_name": "${.env:PROJECT_NAME}"
+                }
             }
         },
         {
