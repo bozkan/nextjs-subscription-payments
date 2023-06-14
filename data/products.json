@@ -11,7 +11,7 @@
                 "name": "Hobby",
                 "description": "Hobby product description",
                 "metadata": {
-                    "project": "${.env:PROJECT}"
+                    "project_name": "${.env:PROJECT_NAME}"
                 }
             }
         },
