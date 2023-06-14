@@ -24,12 +24,13 @@ export default async function Navbar() {
               <Logo />
             </Link>
             <nav className="hidden ml-6 space-x-2 lg:block">
-              <Link href="/" className={s.link}>
-                Pricing
-              </Link>
-              {user && (
+              {user ? (
                 <Link href="/account" className={s.link}>
                   Account
+                </Link>
+              ) : (
+                <Link href="/" className={s.link}>
+                  Pricing
                 </Link>
               )}
             </nav>
