@@ -217,11 +217,8 @@ export default function Pricing({
                 className={cn(
                   'rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
                   {
-                    'border border-pink-500': subscription
-                      ? product.name === subscription?.prices?.products?.name
-                      : product.name === 'Freelancer'
-                  }
-                )}
+                    'border border-pink-500': product.name === subscription?.prices?.products?.name                      
+                  })}
               >
                 <div className="p-6">
                   <h2 className="text-2xl font-semibold leading-6 text-white">
@@ -236,10 +233,9 @@ export default function Pricing({
                       /{billingInterval}
                     </span>
                   </p>
-                  <Button
+                  {session && ( <Button
                     variant="slim"
                     type="button"
-                    disabled={!session}
                     loading={priceIdLoading === price.id}
                     onClick={() => handleCheckout(price)}
                     className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
@@ -248,11 +244,22 @@ export default function Pricing({
                       ? 'Manage'
                       : 'Subscribe'}
                   </Button>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
+          {!session && ( 
+          <div className="flex flex-col items-center mt-4"> 
+            <Button
+              type="button"
+              onClick={() => router.push('/signin')}
+              className="block py-2 mt-8 text-sm font-semibold text-center text-white rounded-lg hover:bg-zinc-900"
+            >Register now
+            </Button>
+          </div>
+          )}
       </div>
     </section>
   );
