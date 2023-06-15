@@ -1,30 +1,36 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
-import { revalidatePath } from 'next/cache';
-
-import { Session } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
+import Card from '@/components/ui/Card';
+import { useState } from 'react';
+import { updateFullName } from '@/utils/supabase-admin';
 
 interface Props {
-  session: Session;
+  fullName: string;
+  uuid: string | undefined;
 }
 
-export default function UsernameButton({ session }: Props) {
-  const router = useRouter();
-  const updateEmail = async (formData: FormData) => {
-    'use server';
+export default function UsernameButton({ fullName, uuid }: Props) {
 
-    const newEmail = formData.get('email') as string;
-    const supabase = createServerActionClient<Database>({ cookies });
-    const { error } = await supabase.auth.updateUser({ email: newEmail });
-    if (error) {
-      console.log(error);
+  const namePlaceholder = '64 characters maximum';
+  const [warning, setWarning] = useState(namePlaceholder);
+
+  const showUpdated = () => {
+    setWarning('Updated ✅');
+    setTimeout(() => {
+      setWarning(namePlaceholder);
+    }, 3000);
+  }
+
+  const updateName = async (event: any) => {
+    event.preventDefault();
+    showUpdated();
+    const { name } = event.target.elements;
+
+    if (uuid) {
+      await updateFullName(name.value, uuid );
     }
-    revalidatePath('/account');
   };
-
 
   return (
     <Card
@@ -32,12 +38,12 @@ export default function UsernameButton({ session }: Props) {
       description="Please enter your full name, or a display name you are comfortable with."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">64 characters maximum</p>
+          <p className="pb-4 sm:pb-0">{warning}</p>
           <Button
             variant="slim"
             type="submit"
             form="nameForm"
-            loading={true}
+  
           >
             Update Name
           </Button>
@@ -45,12 +51,12 @@ export default function UsernameButton({ session }: Props) {
       }
     >
       <div className="mt-8 mb-4 text-xl font-semibold">
-        <form id="nameForm" action={updateName}>
+        <form id="nameForm" onSubmit={updateName}>
           <input
             type="text"
             name="name"
             className="w-1/2 p-3 rounded-md bg-zinc-800"
-            defaultValue={userDetails?.full_name ?? ''}
+            defaultValue={fullName ?? ''}
             placeholder="Your name"
             maxLength={64}
           />
