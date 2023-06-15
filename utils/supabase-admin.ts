@@ -11,7 +11,7 @@ type Price = Database['public']['Tables']['prices']['Row'];
 // as it has admin privileges and overwrites RLS policies!
 const supabaseAdmin = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
 const upsertProductRecord = async (product: Stripe.Product) => {
@@ -177,9 +177,20 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
+const updateFullName = async (name: string, uuid: string) => {
+  const { error } = await supabaseAdmin
+    .from('users')
+    .update({ full_name: name })
+    .eq('id', uuid);
+  if (error) {
+    console.log(error);
+  }
+};
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  updateFullName
 };
