@@ -5,6 +5,7 @@ import { postData } from '@/utils/helpers';
 
 import { Session } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface Props {
   session: Session;
@@ -12,8 +13,11 @@ interface Props {
 
 export default function ManageSubscriptionButton({ session }: Props) {
   const router = useRouter();
+  const [stripeLoading, setStripeLoading] = useState<boolean>(false);
+
   const redirectToCustomerPortal = async () => {
     try {
+      setStripeLoading(true);
       const { url } = await postData({
         url: '/api/create-portal-link'
       });
@@ -30,6 +34,7 @@ export default function ManageSubscriptionButton({ session }: Props) {
         variant="slim"
         disabled={!session}
         onClick={redirectToCustomerPortal}
+        loading={stripeLoading}
       >
         Open customer portal
       </Button>
