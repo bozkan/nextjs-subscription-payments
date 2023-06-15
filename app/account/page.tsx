@@ -1,10 +1,12 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
+import UsernameButton from './UsernameButton';
 import {
   getSession,
   getUserDetails,
   getSubscription
 } from '@/app/supabase-server';
 import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 import { Database } from '@/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
@@ -21,6 +23,8 @@ export default async function Account() {
   ]);
 
   const user = session?.user;
+  const fullName = userDetails?.full_name || '';
+  const userId = user?.id;
 
   if (!session) {
     return redirect('/signin');
@@ -33,23 +37,6 @@ export default async function Account() {
       currency: subscription?.prices?.currency!,
       minimumFractionDigits: 0
     }).format((subscription?.prices?.unit_amount || 0) / 100);
-
-  const updateName = async (formData: FormData) => {
-    'use server';
-
-    const newName = formData.get('name') as string;
-    const supabase = createServerActionClient<Database>({ cookies });
-    const session = await getSession();
-    const user = session?.user;
-    const { error } = await supabase
-      .from('users')
-      .update({ full_name: newName })
-      .eq('id', user?.id);
-    if (error) {
-      console.log(error);
-    }
-    revalidatePath('/account');
-  };
 
   const updateEmail = async (formData: FormData) => {
     'use server';
@@ -93,35 +80,7 @@ export default async function Account() {
             )}
           </div>
         </Card>
-        <Card
-          title="Your Name"
-          description="Please enter your full name, or a display name you are comfortable with."
-          footer={
-            <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <p className="pb-4 sm:pb-0">64 characters maximum</p>
-              <Button
-                variant="slim"
-                type="submit"
-                form="nameForm"
-              >
-                Update Name
-              </Button>
-            </div>
-          }
-        >
-          <div className="mt-8 mb-4 text-xl font-semibold">
-            <form id="nameForm" action={updateName}>
-              <input
-                type="text"
-                name="name"
-                className="w-1/2 p-3 rounded-md bg-zinc-800"
-                defaultValue={userDetails?.full_name ?? ''}
-                placeholder="Your name"
-                maxLength={64}
-              />
-            </form>
-          </div>
-        </Card>
+        <UsernameButton fullName={fullName} uuid={userId} />
         <Card
           title="Your Email"
           description="Please enter the email address you want to use to login."
@@ -157,27 +116,5 @@ export default async function Account() {
         </Card>
       </div>
     </section>
-  );
-}
-
-interface Props {
-  title: string;
-  description?: string;
-  footer?: ReactNode;
-  children: ReactNode;
-}
-
-function Card({ title, description, footer, children }: Props) {
-  return (
-    <div className="w-full max-w-3xl m-auto my-8 border rounded-md p border-zinc-700">
-      <div className="px-5 py-4">
-        <h3 className="mb-1 text-2xl font-medium">{title}</h3>
-        <p className="text-zinc-300">{description}</p>
-        {children}
-      </div>
-      <div className="p-4 border-t rounded-b-md border-zinc-700 bg-zinc-900 text-zinc-500">
-        {footer}
-      </div>
-    </div>
   );
 }
