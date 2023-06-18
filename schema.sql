@@ -146,3 +146,22 @@ create policy "Can only view own subs data." on subscriptions for select using (
  */
 drop publication if exists supabase_realtime;
 create publication supabase_realtime for table products, prices;
+
+/** 
+* METRICS
+* Note: This table contains metric data. Users should only be able to view and update their own data.
+*/
+CREATE TABLE metrics (
+    id SERIAL PRIMARY KEY,
+    user_id uuid references auth.users not null,
+    name VARCHAR(255) NOT NULL,
+    value VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO metrics ("name", "value", "created_at", "updated_at", "user_id") VALUES
+('Revenue', '5000', NOW(), NOW(), '05b4e453-3716-45f8-abff-f65d1be493bf'),
+('Net Profit', '4000', NOW(), NOW(), '05b4e453-3716-45f8-abff-f65d1be493bf'),
+('Customer Acquisition Cost', '200', NOW(), NOW(), '05b4e453-3716-45f8-abff-f65d1be493bf'),
+('Active Users', '250', NOW(), NOW(), '2d4564d7-db13-4a6a-8572-948b456581f7');
