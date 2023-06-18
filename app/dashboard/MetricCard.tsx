@@ -1,3 +1,9 @@
+import type { Metric } from '@/utils/supabase-admin';
+
+type Props = {
+  metric: Metric;
+};
+
 const MetricCard = ({ metric }) => {
   
   const readableDate = new Date(metric.created_at).toLocaleDateString();
