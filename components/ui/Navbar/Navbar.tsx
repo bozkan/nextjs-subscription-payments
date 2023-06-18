@@ -25,9 +25,14 @@ export default async function Navbar() {
             </Link>
             <nav className="hidden ml-6 space-x-2 lg:block">
               {user ? (
-                <Link href="/account" className={s.link}>
-                  Account
-                </Link>
+                <>
+                  <Link href="/account" className={s.link}>
+                    Account
+                  </Link>
+                  <Link href="/dashboard" className={s.link}>
+                    Dashboard
+                  </Link>
+                </>
               ) : (
                 <Link href="/pricing" className={s.link}>
                   Pricing
