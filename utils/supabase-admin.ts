@@ -6,6 +6,7 @@ import type { Database } from 'types_db';
 
 type Product = Database['public']['Tables']['products']['Row'];
 type Price = Database['public']['Tables']['prices']['Row'];
+export type Metric = Database['public']['Tables']['metrics']['Row'];
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
@@ -192,5 +193,6 @@ export {
   upsertPriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
-  updateFullName
+  updateFullName,
+  supabaseAdmin
 };
