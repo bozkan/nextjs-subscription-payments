@@ -4,25 +4,30 @@ import { useState, useEffect } from 'react';
 import { supabaseAdmin } from '@/utils/supabase-admin';
 import type { Metric } from '@/utils/supabase-admin';
 import MetricCard from './MetricCard';
+import MetricInsertCard from './MetricInsertCard';
 import { useSupabase } from '@/app/supabase-provider';
 
 const Dashboard = () => {
 
   const [metrics, setMetrics] = useState<Metric[]>([]);
+  const [userId, setUserId] = useState<string | null | undefined>(null);
   const { supabase } = useSupabase();
+
+  const handleMetricAdded = (newMetric: Metric) => {
+    setMetrics((prevMetrics) => [...prevMetrics, newMetric]);
+  };
 
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
+        setUserId(user?.id);
         const { data, error } = await supabaseAdmin
           .from('metrics')
           .select('*')
           .eq('user_id', user?.id);
           
         if (error) throw error;
-        console.log(data)
-
         setMetrics(data || []);
       } catch (error) {
         console.error("Error fetching metrics:", error);
@@ -35,11 +40,21 @@ const Dashboard = () => {
   return (
     <section className="mb-32 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-extrabold text-center leading-tight text-white">Metrics</h1>
+        <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
+          <div className="sm:align-center sm:flex sm:flex-col">
+            <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
+              Dashboard
+            </h1>
+            <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
+              We partnered with Stripe for a simplified billing.
+            </p>
+          </div>
+        </div>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {metrics.map((metric) => (
             <MetricCard key={metric.id} metric={metric} />
           ))}
+          {userId && <MetricInsertCard userId={userId} onMetricAdded={handleMetricAdded} />}
         </div>
       </div>
     </section>
