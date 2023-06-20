@@ -15,6 +15,12 @@ const supabaseAdmin = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
+const generateUsernameFromFullName = (fullName:string) => fullName
+    .trim()  // remove extra spaces
+    .toLowerCase()  // convert to lower case
+    .replace(/\s+/g, '-')  // replace spaces with hyphens
+    .replace(/[^a-z0-9-_]/g, '');  // remove any characters that are not alphanumeric, hyphen, or underscore
+
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,
@@ -181,11 +187,26 @@ const manageSubscriptionStatusChange = async (
 const updateFullName = async (name: string, uuid: string) => {
   const { error } = await supabaseAdmin
     .from('users')
-    .update({ full_name: name })
+    .update({ full_name: name, username: generateUsernameFromFullName(name)})
     .eq('id', uuid);
   if (error) {
     console.log(error);
   }
+};
+
+const getUsername = async (uuid: string): Promise<string | null> => {
+  const { data, error } = await supabaseAdmin
+    .from('users')
+    .select('username')
+    .eq('id', uuid)
+    .single();
+
+  if (error || !data) {
+    console.error(error);
+    return null;
+  }
+
+  return (data as { username: string }).username;
 };
 
 export {
@@ -194,5 +215,6 @@ export {
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
   updateFullName,
+  getUsername,
   supabaseAdmin
 };
