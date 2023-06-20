@@ -19,6 +19,28 @@ alter table users enable row level security;
 create policy "Can view own user data." on users for select using (auth.uid() = id);
 create policy "Can update own user data." on users for update using (auth.uid() = id);
 
+/* public dashboard */
+ALTER TABLE users ADD COLUMN username VARCHAR(255);
+ALTER TABLE metrics ADD COLUMN username VARCHAR(255);
+
+UPDATE users SET username = gen_random_uuid();
+
+CREATE OR REPLACE FUNCTION update_metrics_username()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE metrics 
+  SET username = NEW.username 
+  WHERE user_id = NEW.id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_metrics_on_users_update
+AFTER UPDATE ON users
+FOR EACH ROW
+WHEN (OLD.username IS DISTINCT FROM NEW.username)
+EXECUTE FUNCTION update_metrics_username();
+
 /**
 * This trigger automatically creates a user entry when a new user signs up via Supabase Auth.
 */ 
@@ -160,6 +182,9 @@ CREATE TABLE metrics (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+/** EXAMPLE METRICS
+* Important! Delete THESE before each deploy
+*/
 INSERT INTO metrics ("name", "value", "created_at", "updated_at", "user_id") VALUES
 ('Revenue', '5000', NOW(), NOW(), '05b4e453-3716-45f8-abff-f65d1be493bf'),
 ('Net Profit', '4000', NOW(), NOW(), '05b4e453-3716-45f8-abff-f65d1be493bf'),
