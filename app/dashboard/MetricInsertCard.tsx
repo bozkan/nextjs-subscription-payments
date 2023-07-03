@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { supabaseAdmin } from '@/utils/supabase-admin';
 
+interface Props {
+  userId: string;
+  onMetricAdded: () => void;
+}
+
 const MetricInsertCard = ({ userId, onMetricAdded }: Props) => {
   const [name, setName] = useState('');
   const [value, setValue] = useState('');
