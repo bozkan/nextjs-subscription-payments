@@ -22,6 +22,7 @@ create policy "Can update own user data." on users for update using (auth.uid() 
 /* public dashboard */
 ALTER TABLE users ADD COLUMN username VARCHAR(255);
 ALTER TABLE metrics ADD COLUMN username VARCHAR(255);
+ALTER TABLE metrics ADD COLUMN metadata jsonb;
 
 UPDATE users SET username = gen_random_uuid();
 
