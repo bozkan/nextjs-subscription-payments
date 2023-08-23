@@ -1,5 +1,4 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
-import UsernameButton from './UsernameButton';
 import {
   getSession,
   getUserDetails,
@@ -76,7 +75,6 @@ export default async function Account() {
             )}
           </div>
         </Card>
-        <UsernameButton fullName={fullName} uuid={userId} />
         <Card
           title="Your Email"
           description="Please enter the email address you want to use to login."
