@@ -6,7 +6,6 @@ import type { Metric } from '@/utils/supabase-admin';
 import MetricCard from './MetricCard';
 import MetricInsertCard from './MetricInsertCard';
 import MetricInsertCardV2 from './MetricInsertCardV2';
-import ShareDashboardButton from './ShareDashboardButton';
 import { useSupabase } from '@/app/supabase-provider';
 
 const Dashboard = () => {
@@ -56,15 +55,7 @@ const Dashboard = () => {
             <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
               Dashboard
             </h1>
-            <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
-              We partnered with Stripe for a simplified billing.
-            </p>
           </div>
-          {username && (
-            <div className="top-4 right-4">
-              <ShareDashboardButton username={username} />
-            </div>
-          )}
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {metrics.map((metric) => (
