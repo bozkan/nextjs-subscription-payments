@@ -12,7 +12,8 @@ export default function AuthUI() {
       <Auth
         supabaseClient={supabase}
         redirectTo={`${getURL()}/pricing`}
-        magicLink={true}
+        magicLink={false}
+        providers={[]}
         appearance={{
           theme: ThemeSupa,
           variables: {
