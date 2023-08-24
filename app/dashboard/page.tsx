@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { supabaseAdmin, getUsername } from '@/utils/supabase-admin';
 import type { Metric } from '@/utils/supabase-admin';
 import MetricCard from './MetricCard';
-import MetricInsertCard from './MetricInsertCard';
-import MetricInsertCardV2 from './MetricInsertCardV2';
 import { useSupabase } from '@/app/supabase-provider';
 
 const Dashboard = () => {
@@ -61,8 +59,6 @@ const Dashboard = () => {
           {metrics.map((metric) => (
             <MetricCard key={metric.id} metric={metric} />
           ))}
-          {userId && <MetricInsertCard userId={userId} onMetricAdded={handleMetricAdded} />}
-          {userId && <MetricInsertCardV2 userId={userId} onMetricAdded={handleMetricAdded} />}
         </div>
       </div>
     </section>
