@@ -20,15 +20,19 @@ export default function AuthUI({view}: Props) {
         providers={[]}
         appearance={{
           theme: ThemeSupa,
+          style: {
+            button: {
+              borderRadius: 9999,
+            },
+          },
           variables: {
             default: {
               colors: {
-                brand: '#2e2e2e',
-                brandAccent: '#2e2e2e',
-                defaultButtonBackground: '#2e2e2e',
-              }
-            }
-          }
+                brand: 'rgb(37, 99, 235)',
+                brandAccent: 'rgb(59, 130, 246)',
+              },
+            },
+          },
         }}
         view={view}
       />

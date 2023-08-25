@@ -46,3 +46,7 @@ a {
 .height-screen-helper {
   height: calc(100vh - 80px);
 }
+
+.supabase-auth-ui_ui-button {
+  font-weight: 600;
+}
