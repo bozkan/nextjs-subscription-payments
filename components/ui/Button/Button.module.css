@@ -3,11 +3,7 @@
 }
 
 .root:hover {
-  @apply bg-zinc-800 text-white border border-white;
-}
-
-.root:focus {
-  @apply outline-none ring-2 ring-pink-500 ring-opacity-50;
+  @apply bg-zinc-800 text-slate-700 border border-white;
 }
 
 .root[data-active] {

@@ -3,6 +3,7 @@ import { createServerSupabaseClient } from '@/app/supabase-server';
 
 import Logo from '@/components/icons/Logo';
 import SignOutButton from './SignOutButton';
+import LinkButton from './LinkButton';
 
 import s from './Navbar.module.css';
 
@@ -26,17 +27,11 @@ export default async function Navbar() {
             <nav className="hidden ml-6 space-x-2 lg:block">
               {user ? (
                 <>
-                  <Link href="/account" className={s.link}>
-                    Account
-                  </Link>
-                  <Link href="/dashboard" className={s.link}>
-                    Dashboard
-                  </Link>
+                  <LinkButton link='/account' value="Account"/>
+                  <LinkButton link='/dashboard' value="Dashboard"/>
                 </>
               ) : (
-                <Link href="/pricing" className={s.link}>
-                  Pricing
-                </Link>
+                <LinkButton link='/pricing' value="Pricing"/>
               )}
             </nav>
           </div>
@@ -44,9 +39,10 @@ export default async function Navbar() {
             {user ? (
               <SignOutButton />
             ) : (
-              <Link href="/signin" className={s.link}>
-                Sign in
-              </Link>
+              <>
+                <LinkButton link='/signin' value="Sign in"/>
+                <LinkButton link='/register' value="Get started today" clss={s.signup}/>
+              </>
             )}
           </div>
         </div>

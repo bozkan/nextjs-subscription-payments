@@ -17,7 +17,7 @@ export default async function SignIn() {
         <div className="flex justify-center pb-12 ">
           <Logo/>
         </div>
-        <AuthUI view="sign_in" />
+        <AuthUI view="sign_up"/>
       </div>
     </div>
   );

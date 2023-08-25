@@ -10,7 +10,7 @@ const MetricCard = ({ metric }: Props) => {
   return (
     <div className="rounded-lg bg-gray-800 overflow-hidden shadow border-2 border-gray-400">
       <div className="px-6 py-4 text-center">
-        <div className="font-bold text-xl mb-6 text-white">{metric.name}</div>
+        <div className="font-bold text-xl mb-6 text-slate-700">{metric.name}</div>
         <p className="text-gray-300 font-extrabold text-6xl">{metric.value}</p>
       </div>
       <div className="px-6 py-4 text-center">

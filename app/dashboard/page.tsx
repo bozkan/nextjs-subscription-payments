@@ -46,11 +46,11 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <section className="mb-32 bg-black relative">
+    <section className="mb-32 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="pt-8 mx-autosm:pt-24">
           <div className="sm:align-center sm:flex sm:flex-col">
-            <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
+            <h1 className="text-4xl font-extrabold text-slate-700 sm:text-center sm:text-6xl">
               Dashboard
             </h1>
           </div>
