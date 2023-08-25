@@ -23,13 +23,13 @@ export default function AuthUI({view}: Props) {
           variables: {
             default: {
               colors: {
-                brand: '#404040',
-                brandAccent: '#52525b'
+                brand: '#2e2e2e',
+                brandAccent: '#2e2e2e',
+                defaultButtonBackground: '#2e2e2e',
               }
             }
           }
         }}
-        theme="dark"
         view={view}
       />
     </div>
