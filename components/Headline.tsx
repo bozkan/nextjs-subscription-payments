@@ -1,7 +1,14 @@
+import { Lexend } from 'next/font/google';
+
+const lexend = Lexend({
+  weight: '600',
+  subsets: ['latin']
+})
+
 export default async function Headline() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16 pt-20 text-center lg:pt-32">
-    <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl">
+      <h1 className={`{lexend.className} mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl ${lexend.className}`}>
       {" "}
       <span className="relative whitespace-nowrap text-blue-600">
         <svg

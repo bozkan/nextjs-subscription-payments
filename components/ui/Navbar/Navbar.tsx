@@ -3,7 +3,7 @@ import { createServerSupabaseClient } from '@/app/supabase-server';
 
 import Logo from '@/components/icons/Logo';
 import SignOutButton from './SignOutButton';
-import LinkButton from './LinkButton';
+import LinkButton from '@/components/ui/LinkButton';
 
 import s from './Navbar.module.css';
 
@@ -14,39 +14,37 @@ export default async function Navbar() {
   } = await supabase.auth.getUser();
 
   return (
-    <nav className={s.root}>
-      <a href="#skip" className="sr-only focus:not-sr-only">
-        Skip to content
-      </a>
-      <div className="max-w-6xl px-6 mx-auto">
-        <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
-          <div className="flex items-center flex-1">
-            <Link href="/" className={s.logo} aria-label="Logo">
-              <Logo />
-            </Link>
-            <nav className="hidden ml-6 space-x-2 lg:block">
-              {user ? (
-                <>
-                  <LinkButton link='/account' value="Account"/>
-                  <LinkButton link='/dashboard' value="Dashboard"/>
-                </>
-              ) : (
-                <LinkButton link='/pricing' value="Pricing"/>
-              )}
-            </nav>
-          </div>
-          <div className="flex justify-end flex-1 space-x-8">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <nav className={`relative z-50 flex justify-between ${s.root}`}>
+        <a href="#skip" className="sr-only focus:not-sr-only">
+          Skip to content
+        </a>
+        <div className="flex items-center md:gap-x-12">
+          <Link href="/" className={s.logo} aria-label="Logo">
+            <Logo />
+          </Link>
+          <div className="hidden md:flex md:gap-x-6">
             {user ? (
-              <SignOutButton />
-            ) : (
               <>
-                <LinkButton link='/signin' value="Sign in"/>
-                <LinkButton link='/register' value="Get started today" clss={s.signup}/>
+                <LinkButton link='/account' value="Account"/>
+                <LinkButton link='/dashboard' value="Dashboard"/>
               </>
+            ) : (
+              <LinkButton link='/pricing' value="Pricing"/>
             )}
           </div>
         </div>
-      </div>
-    </nav>
+        <div className="flex items-center gap-x-5 md:gap-x-8">
+          {user ? (
+            <SignOutButton />
+          ) : (
+            <>
+              <LinkButton link='/signin' value="Sign in"/>
+              <LinkButton link='/register' value="Get started today" clss={s.signup}/>
+            </>
+          )}
+        </div>
+      </nav>
+    </div>   
   );
 }
