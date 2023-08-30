@@ -10,5 +10,11 @@ export async function middleware(req: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const { pathname, origin } = req.nextUrl
+
+  if (!user && pathname === '/dashboard') {
+    return NextResponse.redirect(`${origin}/signin`)
+  }
+  
   return res
 }

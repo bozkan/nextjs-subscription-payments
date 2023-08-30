@@ -82,7 +82,7 @@ export async function POST(req: Request) {
         );
       }
     } catch (err: any) {
-      console.log(err);
+      console.error('/create-checkout-session failed: ', err.message);
       return new Response(JSON.stringify(err), { status: 500 });
     }
   } else {

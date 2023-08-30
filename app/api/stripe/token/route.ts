@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       });
       
     } catch (err: any) {
-      console.log(err);
+      console.error('stripe/token failed: ', err.message);
       return new Response(
         JSON.stringify({ error: { statusCode: 500, message: err.message } }),
         {

@@ -21,7 +21,7 @@ export default async function Navbar() {
         </a>
         <div className="flex items-center md:gap-x-12">
           <Link href="/" className={s.logo} aria-label="Logo">
-            <Logo />
+            <Logo classes="h-10"/>
           </Link>
           <div className="hidden md:flex md:gap-x-6">
             {user ? (

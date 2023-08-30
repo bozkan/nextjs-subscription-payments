@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         status: 200
       });
     } catch (err: any) {
-      console.log(err);
+      console.error('/create-portal-link failed: ', err.message);
       return new Response(
         JSON.stringify({ error: { statusCode: 500, message: err.message } }),
         {

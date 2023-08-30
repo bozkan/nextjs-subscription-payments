@@ -15,7 +15,7 @@ export async function getSession() {
     } = await supabase.auth.getSession();
     return session;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Session not fetched: ', error.message);
     return null;
   }
 }
@@ -29,7 +29,7 @@ export async function getUserDetails() {
       .single();
     return userDetails;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('User details not fetched:', error.message);
     return null;
   }
 }
@@ -45,7 +45,7 @@ export async function getSubscription() {
       .throwOnError();
     return subscription;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Subscription not fetched:', error.message);
     return null;
   }
 }
@@ -62,7 +62,7 @@ export const getActiveProductsWithPrices = async () => {
     .order('unit_amount', { foreignTable: 'prices' });
 
   if (error) {
-    console.log(error.message);
+    console.error('Active prodcuts with prices not fetched', error.message);
   }
   return data ?? [];
 };

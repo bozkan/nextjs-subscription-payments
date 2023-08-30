@@ -1,5 +1,9 @@
-const Logo = () => (
-  <img width="32" src="logo.png" alt="SaaS Tick Logo"/>
+interface props {
+  classes?: string;
+}
+
+const Logo = ({classes} : props) => (
+  <img className={classes} src="logo.png" alt="SaaS Tick Logo"/>
 );
 
 export default Logo;

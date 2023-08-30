@@ -32,7 +32,10 @@ const upsertProductRecord = async (product: Stripe.Product) => {
   };
 
   const { error } = await supabaseAdmin.from('products').upsert([productData]);
-  if (error) throw error;
+  if (error) {
+    console.error('upsertProductRecord failed: ', error.message);
+    throw error;
+  }
   console.log(`Product inserted/updated: ${product.id}`);
 };
 
@@ -52,7 +55,10 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
   };
 
   const { error } = await supabaseAdmin.from('prices').upsert([priceData]);
-  if (error) throw error;
+  if (error) {
+    console.error('upsertPriceRecord failed: ', error.message);
+    throw error;
+  }
   console.log(`Price inserted/updated: ${price.id}`);
 };
 
@@ -82,7 +88,10 @@ const createOrRetrieveCustomer = async ({
     const { error: supabaseError } = await supabaseAdmin
       .from('customers')
       .insert([{ id: uuid, stripe_customer_id: customer.id }]);
-    if (supabaseError) throw supabaseError;
+    if (supabaseError) {
+      console.error('createOrRetrieveCustomer failed: ', supabaseError.message);
+      throw supabaseError;
+    }
     console.log(`New customer created and inserted for ${uuid}.`);
     return customer.id;
   }
@@ -109,7 +118,10 @@ const copyBillingDetailsToCustomer = async (
       payment_method: { ...payment_method[payment_method.type] }
     })
     .eq('id', uuid);
-  if (error) throw error;
+  if (error) {
+    console.error('copyBillingDetailsToCustomer failed: ', error.message);
+    throw error;
+  }
 };
 
 const manageSubscriptionStatusChange = async (
@@ -117,6 +129,7 @@ const manageSubscriptionStatusChange = async (
   customerId: string,
   createAction = false
 ) => {
+  
   // Get customer's UUID from mapping table.
   const { data: customerData, error: noCustomerError } = await supabaseAdmin
     .from('customers')
@@ -169,7 +182,11 @@ const manageSubscriptionStatusChange = async (
   const { error } = await supabaseAdmin
     .from('subscriptions')
     .upsert([subscriptionData]);
-  if (error) throw error;
+
+  if (error) {
+    console.error('manageSubscriptionStatusChange failed: ', error.message);
+    throw error;
+  }
   console.log(
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
   );
@@ -190,7 +207,8 @@ const updateFullName = async (name: string, uuid: string) => {
     .update({ full_name: name, username: generateUsernameFromFullName(name)})
     .eq('id', uuid);
   if (error) {
-    console.log(error);
+    console.error('updateFullName failed: ', error.message);
+    throw error;
   }
 };
 
@@ -202,7 +220,7 @@ const getUsername = async (uuid: string): Promise<string | null> => {
     .single();
 
   if (error || !data) {
-    console.error(error);
+    console.error('Username not fetched', error.message);
     return null;
   }
 

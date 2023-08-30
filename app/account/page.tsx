@@ -21,8 +21,6 @@ export default async function Account() {
   ]);
 
   const user = session?.user;
-  const fullName = userDetails?.full_name || '';
-  const userId = user?.id;
 
   if (!session) {
     return redirect('/signin');
@@ -43,7 +41,7 @@ export default async function Account() {
     const supabase = createServerActionClient<Database>({ cookies });
     const { error } = await supabase.auth.updateUser({ email: newEmail });
     if (error) {
-      console.log(error);
+      console.error('Email not updated', error.message);
     }
     revalidatePath('/account');
   };
