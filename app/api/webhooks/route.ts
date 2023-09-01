@@ -25,7 +25,6 @@ export async function POST(req: Request) {
     process.env.STRIPE_WEBHOOK_SECRET_LIVE ?? process.env.STRIPE_WEBHOOK_SECRET;
   let event: Stripe.Event;
 
-  console.log("INSIDE ------------")
   try {
     if (!sig || !webhookSecret) return;
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
@@ -33,11 +32,9 @@ export async function POST(req: Request) {
     console.error(`/webhook error:  ${err.message}`);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
-  console.log("EVENT:", event.type)
 
   if (relevantEvents.has(event.type)) {
     try {
-      console.log("EVENT:", event.type)
       switch (event.type) {
         case 'product.created':
         case 'product.updated':
@@ -51,7 +48,6 @@ export async function POST(req: Request) {
         case 'customer.subscription.updated':
         case 'customer.subscription.deleted':
           const subscription = event.data.object as Stripe.Subscription;
-          console.log("ACTION2:", event.type)
           await manageSubscriptionStatusChange(
             subscription.id,
             subscription.customer as string,
@@ -62,7 +58,6 @@ export async function POST(req: Request) {
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
           if (checkoutSession.mode === 'subscription') {
             const subscriptionId = checkoutSession.subscription;
-            console.log("ACTION1:", true)
             await manageSubscriptionStatusChange(
               subscriptionId as string,
               checkoutSession.customer as string,

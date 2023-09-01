@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button';
 import { Database } from '@/types_db';
 import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
-import { Session, User } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Lexend } from 'next/font/google';
@@ -30,37 +30,29 @@ interface SubscriptionWithProduct extends Subscription {
 }
 
 interface Props {
-  session: Session | null;
   user: User | null | undefined;
+
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
 }
 
-type BillingInterval = 'lifetime' | 'year' | 'month';
-
 export default function Pricing({
-  session,
   user,
   products,
   subscription
 }: Props) {
-  const intervals = Array.from(
-    new Set(
-      products.flatMap((product) =>
-        product?.prices?.map((price) => price?.interval)
-      )
-    )
-  );
   const router = useRouter();
-  const [billingInterval, setBillingInterval] =
-    useState<BillingInterval>('month');
+
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
 
   const handleCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
     if (!user) {
-      return router.push('/signin');
+      return router.push('/register');
     }
+    console.log("PRICE:", price.product_id)
+    console.log("Subscription:", subscription?.prices?.products?.id)
+
     if (price.product_id === subscription?.prices?.products?.id) {
       return router.push('/account');
     }
@@ -100,7 +92,7 @@ export default function Pricing({
                 }).format(price.unit_amount / 100);
 
               return (
-                <section className="flex flex-col rounded-3xl px-6 sm:px-8 order-first bg-blue-600 py-8 lg:order-none">
+                <section key={price.interval} className="flex flex-col rounded-3xl px-6 sm:px-8 order-first bg-blue-600 py-8 lg:order-none">
                   <h3 className="mt-1 ml-1 font-display text-lg text-white">/ {price.interval}</h3>
                   <p className="mt-5 text-base text-white">
                     {price.description}
@@ -124,7 +116,6 @@ export default function Pricing({
                   <Button
                       variant="slim"
                       type="button"
-                      disabled={false}
                       loading={priceIdLoading === price.id}
                       onClick={() => handleCheckout(price)}
                       className={styles.signup}

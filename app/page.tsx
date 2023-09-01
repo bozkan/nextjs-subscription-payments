@@ -1,4 +1,4 @@
-import Headline from '@/components/Headline';
+import Headline from '@/components/ui/Headline/Headline';
 
 export default async function HomePage() {
   return (
