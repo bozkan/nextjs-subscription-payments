@@ -50,8 +50,6 @@ export default function Pricing({
     if (!user) {
       return router.push('/register');
     }
-    console.log("PRICE:", price.product_id)
-    console.log("Subscription:", subscription?.prices?.products?.id)
 
     if (price.product_id === subscription?.prices?.products?.id) {
       return router.push('/account');
