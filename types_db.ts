@@ -215,6 +215,7 @@ export interface Database {
           full_name: string | null
           id: string
           payment_method: Json | null
+          status?: Database["public"]["Enums"]["subscription_status"] | null
         }
         Insert: {
           avatar_url?: string | null
@@ -222,6 +223,7 @@ export interface Database {
           full_name?: string | null
           id: string
           payment_method?: Json | null
+          status?: Database["public"]["Enums"]["subscription_status"] | null
         }
         Update: {
           avatar_url?: string | null
@@ -229,6 +231,7 @@ export interface Database {
           full_name?: string | null
           id?: string
           payment_method?: Json | null
+          status?: Database["public"]["Enums"]["subscription_status"] | null
         }
         Relationships: [
           {

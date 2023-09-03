@@ -6,6 +6,7 @@ import type { Database } from 'types_db';
 
 type Product = Database['public']['Tables']['products']['Row'];
 type Price = Database['public']['Tables']['prices']['Row'];
+type Status = Database["public"]["Enums"]["subscription_status"];
 export type Metric = Database['public']['Tables']['metrics']['Row'];
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
@@ -14,12 +15,6 @@ const supabaseAdmin = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY || ''
 );
-
-const generateUsernameFromFullName = (fullName:string) => fullName
-    .trim()  // remove extra spaces
-    .toLowerCase()  // convert to lower case
-    .replace(/\s+/g, '-')  // replace spaces with hyphens
-    .replace(/[^a-z0-9-_]/g, '');  // remove any characters that are not alphanumeric, hyphen, or underscore
 
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
@@ -103,7 +98,8 @@ const createOrRetrieveCustomer = async ({
  */
 const copyBillingDetailsToCustomer = async (
   uuid: string,
-  payment_method: Stripe.PaymentMethod
+  payment_method: Stripe.PaymentMethod,
+  status: Status
 ) => {
   //Todo: check this assertion
   const customer = payment_method.customer as string;
@@ -115,7 +111,8 @@ const copyBillingDetailsToCustomer = async (
     .from('users')
     .update({
       billing_address: { ...address },
-      payment_method: { ...payment_method[payment_method.type] }
+      payment_method: { ...payment_method[payment_method.type] },
+      status: status
     })
     .eq('id', uuid);
   if (error) {
@@ -196,34 +193,9 @@ const manageSubscriptionStatusChange = async (
     //@ts-ignore
     await copyBillingDetailsToCustomer(
       uuid,
-      subscription.default_payment_method as Stripe.PaymentMethod
+      subscription.default_payment_method as Stripe.PaymentMethod,
+      subscription.status
     );
-};
-
-const updateFullName = async (name: string, uuid: string) => {
-  const { error } = await supabaseAdmin
-    .from('users')
-    .update({ full_name: name, username: generateUsernameFromFullName(name)})
-    .eq('id', uuid);
-  if (error) {
-    console.error('updateFullName failed: ', error.message);
-    throw error;
-  }
-};
-
-const getUsername = async (uuid: string): Promise<string | null> => {
-  const { data, error } = await supabaseAdmin
-    .from('users')
-    .select('username')
-    .eq('id', uuid)
-    .single();
-
-  if (error || !data) {
-    console.error('Username not fetched', error.message);
-    return null;
-  }
-
-  return (data as { username: string }).username;
 };
 
 export {
@@ -231,7 +203,5 @@ export {
   upsertPriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
-  updateFullName,
-  getUsername,
   supabaseAdmin
 };

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { supabaseAdmin, getUsername } from '@/utils/supabase-admin';
+import { supabaseAdmin } from '@/utils/supabase-admin';
 import type { Metric } from '@/utils/supabase-admin';
 import MetricCard from './MetricCard';
 import { useSupabase } from '@/app/supabase-provider';
@@ -9,8 +9,6 @@ import { useSupabase } from '@/app/supabase-provider';
 const Dashboard = () => {
 
   const [metrics, setMetrics] = useState<Metric[]>([]);
-  const [userId, setUserId] = useState<string | null | undefined>(null);
-  const [username, setUsername] = useState<string | null | undefined>(null);
   const { supabase } = useSupabase();
 
   const handleMetricAdded = (newMetric: Metric) => {
@@ -21,14 +19,6 @@ const Dashboard = () => {
     const fetchMetrics = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-
-        if (user?.id) {
-          const fetchedUsername = await getUsername(user.id);
-          if (typeof fetchedUsername === 'string') {
-            setUsername(fetchedUsername);
-          }
-          setUserId(user.id);
-        }
     
         const { data, error } = await supabaseAdmin
           .from('metrics')

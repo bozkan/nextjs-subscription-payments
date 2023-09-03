@@ -162,6 +162,7 @@ create table subscriptions (
 );
 alter table subscriptions enable row level security;
 create policy "Can only view own subs data." on subscriptions for select using (auth.uid() = user_id);
+ALTER TABLE users ADD COLUMN status subscription_status;
 
 /**
  * REALTIME SUBSCRIPTIONS
