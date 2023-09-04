@@ -5,7 +5,6 @@
 create table users (
   -- UUID from auth.users
   id uuid references auth.users not null primary key,
-  username text unique, 
   full_name text,
   avatar_url text,
   -- The customer's billing address, stored in JSON format.
@@ -13,34 +12,14 @@ create table users (
   -- Stores your customer's payment instruments.
   payment_method jsonb
   updated_at timestamp with time zone, 
-  constraint username_length check (char_length(username) >= 3) 
 );
 alter table users enable row level security;
 create policy "Can view own user data." on users for select using (auth.uid() = id);
 create policy "Can update own user data." on users for update using (auth.uid() = id);
 
 /* public dashboard */
-ALTER TABLE users ADD COLUMN username VARCHAR(255);
-ALTER TABLE metrics ADD COLUMN username VARCHAR(255);
 ALTER TABLE metrics ADD COLUMN metadata jsonb;
 
-UPDATE users SET username = gen_random_uuid();
-
-CREATE OR REPLACE FUNCTION update_metrics_username()
-RETURNS TRIGGER AS $$
-BEGIN
-  UPDATE metrics 
-  SET username = NEW.username 
-  WHERE user_id = NEW.id;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_metrics_on_users_update
-AFTER UPDATE ON users
-FOR EACH ROW
-WHEN (OLD.username IS DISTINCT FROM NEW.username)
-EXECUTE FUNCTION update_metrics_username();
 
 /**
 * This trigger automatically creates a user entry when a new user signs up via Supabase Auth.
