@@ -15,6 +15,7 @@ export async function middleware(req: NextRequest) {
   if (!user && pathname === '/dashboard') {
     return NextResponse.redirect(`${origin}/signin`)
   }
-  
+
+  console.log('USER: ', user);
   return res
 }
