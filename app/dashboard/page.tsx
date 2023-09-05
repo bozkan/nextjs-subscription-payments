@@ -1,12 +1,20 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { supabaseAdmin } from '@/utils/supabase-admin';
+import { supabaseAdmin, getUser } from '@/utils/supabase-admin';
 import type { Metric } from '@/utils/supabase-admin';
 import MetricCard from './MetricCard';
 import { useSupabase } from '@/app/supabase-provider';
+import { redirect } from 'next/navigation';
 
-const Dashboard = () => {
+const Dashboard = async () => {
+
+  const userDetails = await getUser();
+  console.log (userDetails);
+
+  if (userDetails?.status !== 'active') {
+    return redirect('/signin');
+  }
 
   const [metrics, setMetrics] = useState<Metric[]>([]);
   const { supabase } = useSupabase();

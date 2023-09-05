@@ -198,10 +198,25 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
+const getUser = async() => {
+  const { data, error} = await supabaseAdmin
+  .from('users')
+  .select('*')
+  .single();
+
+  if (error) {
+    console.error('getUser failed: ', error.message);
+    throw error;
+  }
+
+  return data;
+}
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
+  getUser,
   supabaseAdmin
 };
